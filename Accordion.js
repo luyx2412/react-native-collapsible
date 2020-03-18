@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { View, TouchableHighlight } from 'react-native';
-import Collapsible from './Collapsible';
-import { ViewPropTypes } from './config';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { View, TouchableHighlight } from "react-native";
+import Collapsible from "./Collapsible";
+import { ViewPropTypes } from "./config";
 
 const COLLAPSIBLE_PROPS = Object.keys(Collapsible.propTypes);
 const VIEW_PROPS = Object.keys(ViewPropTypes);
@@ -12,10 +12,11 @@ export default class Accordion extends Component {
     sections: PropTypes.array.isRequired,
     renderHeader: PropTypes.func.isRequired,
     renderContent: PropTypes.func.isRequired,
+    renderFooter: PropTypes.func,
     renderSectionTitle: PropTypes.func,
     activeSections: PropTypes.arrayOf(PropTypes.number).isRequired,
     onChange: PropTypes.func.isRequired,
-    align: PropTypes.oneOf(['top', 'center', 'bottom']),
+    align: PropTypes.oneOf(["top", "center", "bottom"]),
     duration: PropTypes.number,
     easing: PropTypes.string,
     underlayColor: PropTypes.string,
@@ -26,18 +27,18 @@ export default class Accordion extends Component {
     expandMultiple: PropTypes.bool,
     onAnimationEnd: PropTypes.func,
     sectionContainerStyle: ViewPropTypes.style,
-    containerStyle: ViewPropTypes.style,
+    containerStyle: ViewPropTypes.style
   };
 
   static defaultProps = {
-    underlayColor: 'black',
+    underlayColor: "black",
     disabled: false,
     expandFromBottom: false,
     expandMultiple: false,
     touchableComponent: TouchableHighlight,
     renderSectionTitle: () => null,
     onAnimationEnd: () => null,
-    sectionContainerStyle: {},
+    sectionContainerStyle: {}
   };
 
   _toggleSection(section) {
@@ -82,7 +83,8 @@ export default class Accordion extends Component {
       onAnimationEnd,
       renderContent,
       renderHeader,
-      renderSectionTitle,
+      renderFooter,
+      renderSectionTitle
     } = this.props;
 
     const renderCollapsible = (section, key) => (
@@ -117,6 +119,14 @@ export default class Accordion extends Component {
             </Touchable>
 
             {!expandFromBottom && renderCollapsible(section, key)}
+
+            {renderFooter &&
+              renderFooter(
+                section,
+                key,
+                activeSections.includes(key),
+                sections
+              )}
           </View>
         ))}
       </View>

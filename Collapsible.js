@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Animated, Easing, View } from "react-native";
+import { Animated, Easing } from "react-native";
 import { ViewPropTypes } from "./config";
 
 const ANIMATED_EASING_PREFIXES = ["easeInOut", "easeOut", "easeIn"];
@@ -180,12 +180,19 @@ export default class Collapsible extends Component {
 
   render() {
     const { collapsed, enablePointerEvents } = this.props;
-    const { height, contentHeight, measuring, measured } = this.state;
+    const {
+      animating,
+      height,
+      contentHeight,
+      measuring,
+      measured
+    } = this.state;
     const hasKnownHeight = !measuring && (measured || collapsed);
-    const style = hasKnownHeight && {
-      overflow: "hidden",
-      height: height
-    };
+    const style = hasKnownHeight &&
+      animating && {
+        overflow: "hidden",
+        height: height
+      };
     const contentStyle = {};
     if (measuring) {
       contentStyle.position = "absolute";
@@ -219,9 +226,7 @@ export default class Collapsible extends Component {
           style={[this.props.style, contentStyle]}
           onLayout={this.state.animating ? undefined : this._handleLayoutChange}
         >
-          <View style={{ height: measured ? contentHeight : null }}>
-            {this.props.children}
-          </View>
+          {this.props.children}
         </Animated.View>
       </Animated.View>
     );
